@@ -5,7 +5,7 @@ import {
   Text
 } from '@chakra-ui/react';
 
-type T_SearchResult = {
+export type T_SearchResult = {
   SEARCHVAL: string,
   BLK_NO: string,
   ROAD_NAME: string,
@@ -20,13 +20,19 @@ type T_SearchResult = {
 }
 
 interface I_SearchResultProps {
-  searchResults: T_SearchResult[]
+  searchResults: T_SearchResult[],
+  onResultSelect: (_searchResult: T_SearchResult) => void
 }
 
 const MAX_RESULTS = 5
 
 class SearchResults extends React.Component<I_SearchResultProps> {
   render() {
+
+    if (!this.props.searchResults || this.props.searchResults.length == 0 ) {
+      return null
+    }
+
     return (
       <Grid 
         templateColumns='1fr'
@@ -42,6 +48,7 @@ class SearchResults extends React.Component<I_SearchResultProps> {
               borderRadius='lg' 
               border='0.25px outset grey' 
               cursor='pointer'
+              onClick={() => this.props.onResultSelect(_searchResult)}
               >
               <Text fontSize='sm'>{_searchResult.ADDRESS}</Text>
             </Box>

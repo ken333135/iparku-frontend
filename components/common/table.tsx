@@ -9,9 +9,11 @@ import {
 type T_TableData = {
   location: string,
   distance: number,
-  availability: boolean,
-  rate: string,
-  fee: number
+  availability?: boolean,
+  lots_available?: number,
+  total_lots?: number,
+  rate?: string,
+  fee?: number
 }
 
 interface I_TableProps {
@@ -47,22 +49,37 @@ class Table extends React.Component<I_TableProps> {
     const cells: T_CellData[] = []
 
     this.props.data.map(_data => {
-      Object.keys(_data).map(_key => {
-        return (
-          cells.push({
-            text: `${_data[_key]}`,
-            backgroundColor: '#e6e6e6',
-            textColor: _key === 'availability' ?
-              (_data[_key] ? 'green' : 'red') :
-              undefined
-          })
-        )
+      /* location */
+      cells.push({ 
+        text: _data.location,
+        backgroundColor: '#e6e6e6',
+      })
+      /* Distance */
+      cells.push({ 
+        text: `${_data.distance}`,
+        backgroundColor: '#e6e6e6',
+      })
+      /* Availability */
+      cells.push({ 
+        text: `${_data.lots_available} / ${_data.total_lots}`,
+        textColor: _data.availability ? 'green': 'red',
+        backgroundColor: '#e6e6e6',
+      })
+      /* Rate */
+      cells.push({ 
+        text: `${_data.rate}`,
+        backgroundColor: '#e6e6e6',
+      })
+      /* Fee */
+      cells.push({ 
+        text: `${_data.fee}`,
+        backgroundColor: '#e6e6e6',
       })
     })
 
     return (
       <Grid
-        templateColumns='repeat(5, 1fr)'
+        templateColumns='3fr repeat(4, 1fr)'
         rowGap={2}
         columnGap={2}>
         {headers.map(_header => cell(_header))}

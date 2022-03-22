@@ -12,12 +12,16 @@ import {
 } from "@chakra-ui/react";
 
 import Table from "../common/table";
-import SearchResults from './search-results';
+import SearchResults, { T_SearchResult } from './search-results';
 
-import { _getZipcode, _getSearchSuggestions } from "../../services";
+import { 
+  _getSearchSuggestions,
+  _getCarparkByXY
+} from "../../services";
 
 type I_HomeState = {
   searchResults: any[];
+  carparks: any[];
   isError: Boolean;
 };
 
@@ -178,7 +182,8 @@ class Home extends React.Component<{}, I_HomeState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      searchResults: searchResults,
+      searchResults: [],
+      carparks: [],
       isError: false,
     };
   }
@@ -208,11 +213,14 @@ class Home extends React.Component<{}, I_HomeState> {
               onChange={(e) => this.onInputChange(e)} 
               background='white'
               mb={2}/>
-            <SearchResults searchResults={this.state.searchResults} />
+            <SearchResults 
+              searchResults={this.state.searchResults}
+              onResultSelect={this.onResultSelect} 
+              />
           </Box>
 
           <Box>
-            <Table data={data} />
+            <Table data={this.state.carparks} />
             <Box width='100%' textAlign='right'>
               <Link href="/upgrade" fontSize='sm' color='orange.500' as='i'  >Upgrade to premium to check more options</Link>
             </Box>
@@ -249,17 +257,15 @@ class Home extends React.Component<{}, I_HomeState> {
 
   debouncedInputChange = debounce(async (value) => {
 
-    console.log("DEBOUCNE??")
     try {
 
       let searchResults = await _getSearchSuggestions(value);
 
-      console.log({ searchResults })
-
       this.setState({
-        searchResults: searchResults.data,
+        searchResults: searchResults.data.results,
         isError: false,
       });
+
     } catch (e) {
       this.setState({
         searchResults: [],
@@ -269,9 +275,37 @@ class Home extends React.Component<{}, I_HomeState> {
   }, 1000);
 
   onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value)
     this.debouncedInputChange(e.target.value);
   };
+
+  onResultSelect = async (selectedResult: T_SearchResult) => {
+
+    try {
+
+      const RADIUS = 20
+      const carparkResponse = await _getCarparkByXY(selectedResult.X, selectedResult.Y, `${RADIUS}`)
+      console.table(carparkResponse.data)
+      const carparks = carparkResponse.data.map(_carpark => {
+        return {
+          location: _carpark.address,
+          distance: 0,
+          lots_available: _carpark.lots_available,
+          total_lots: _carpark.total_lots,
+          availability: _carpark.lots_available < _carpark.total_lots,
+          rate: '$0.14/min',
+          fee: '$1.11'
+        }
+      })
+
+      this.setState({
+        carparks: carparks
+      })
+    } catch (e) { 
+      console.error(e)
+    }
+  
+
+  }
 }
 
 export default Home;
