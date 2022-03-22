@@ -6,6 +6,14 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
+body {
+  /* background-image: url('/images/background.jpg') !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% !important;
+  background-position: center !important; 
+  background-color: grey !important; */
+}
+
 a {
   color: inherit;
   text-decoration: none;
