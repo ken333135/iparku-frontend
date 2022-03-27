@@ -12,6 +12,7 @@ type T_TableData = {
   availability?: boolean,
   lots_available?: number,
   total_lots?: number,
+  rates?: any[],
   rate?: string,
   fee?: number
 }
@@ -49,6 +50,7 @@ class Table extends React.Component<I_TableProps> {
     const cells: T_CellData[] = []
 
     this.props.data.map(_data => {
+
       /* location */
       cells.push({ 
         text: _data.location,

@@ -19,7 +19,6 @@ function Navbar() {
 
   const router = useRouter()
 
-  console.log({ router })
   return (
     <VStack width='100%' padding={4}>
       <HStack columnGap={16}>
@@ -32,9 +31,10 @@ function Navbar() {
             width={120}
             height={35} />
         </Box>
-        {links.map(_link => {
+        {links.map((_link, idx) => {
           return (
             <Link
+              key={`link-${idx}`}
               href={_link.href}
               fontWeight={700}
               color={_link.href === router.asPath ? 'red' : 'black'}>{_link.text}</Link>
