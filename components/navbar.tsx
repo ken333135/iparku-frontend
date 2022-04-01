@@ -10,8 +10,8 @@ import {
 } from '@chakra-ui/react'
 
 const links = [
-  { href: '/about', text: 'About' },
   { href: '/', text: 'Home' },
+  { href: '/about', text: 'About' },
   { href: '/support', text: 'Support' },
 ]
 

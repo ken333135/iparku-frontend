@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 
 import {
   Grid,
@@ -40,7 +41,7 @@ const headers = [
   { text: 'Distance', backgroundColor: '#b6b7b9' },
   { text: 'Availability', backgroundColor: '#b6b7b9' },
   { text: 'Rate', backgroundColor: '#b6b7b9' },
-  { text: 'Fee (est.)', backgroundColor: '#b6b7b9' },
+  // { text: 'Fee (est.)', backgroundColor: '#b6b7b9' },
 ]
 
 class Table extends React.Component<I_TableProps> {
@@ -48,8 +49,53 @@ class Table extends React.Component<I_TableProps> {
   render() {
 
     const cells: T_CellData[] = []
+    const dow = moment().isoWeekday()
+    const hour = moment().hour()
 
+    let rateKeyPublic: string;
+    let rateKeyPrivate: string;
+
+
+    switch(dow) {
+      case(1):
+      case(2):
+      case(3):
+      case(4):
+      case(5):
+        rateKeyPublic = 'weekday_rate'
+        if (hour < 17 ) { rateKeyPrivate = 'weekday_before_5' }
+        if (hour >= 17 ) { rateKeyPrivate = 'weekday_after_5' }
+        break;
+      case(6):
+        rateKeyPublic = 'sat_rate'
+        rateKeyPrivate = 'sat'
+        break;
+      case(7):
+        rateKeyPublic = 'sun_rate'
+        rateKeyPrivate = 'sun'
+        break;
+      default:
+        rateKeyPublic = 'weekday_rate';
+        rateKeyPrivate = 'weekday_rate';
+    }
+
+    
     this.props.data.map(_data => {
+
+      const rateTextPublic = _data.rates && `${_data.rates[rateKeyPublic]}/min` 
+      const rateTextPrivate = `${_data[rateKeyPrivate]}` 
+      const rateText = _data.rates ? rateTextPublic : rateTextPrivate
+
+      /* default */
+      let availability = 'Unavailable'
+      /* If both total and avail  */
+      if (_data.lots_available && _data.total_lots) {
+        availability = `${_data.lots_available} / ${_data.total_lots}`
+      }
+      /* only lots avail */
+      if (_data.lots_available) {
+        availability = `${_data.lots_available}`
+      }
 
       /* location */
       cells.push({ 
@@ -63,25 +109,25 @@ class Table extends React.Component<I_TableProps> {
       })
       /* Availability */
       cells.push({ 
-        text: `${_data.lots_available} / ${_data.total_lots}`,
+        text: availability,
         textColor: _data.availability ? 'green': 'red',
         backgroundColor: '#e6e6e6',
       })
       /* Rate */
       cells.push({ 
-        text: `${_data.rate}`,
+        text: rateText,
         backgroundColor: '#e6e6e6',
       })
-      /* Fee */
-      cells.push({ 
-        text: `${_data.fee}`,
-        backgroundColor: '#e6e6e6',
-      })
+      // /* Fee */
+      // cells.push({ 
+      //   text: `${_data.fee}`,
+      //   backgroundColor: '#e6e6e6',
+      // })
     })
 
     return (
       <Grid
-        templateColumns='3fr repeat(4, 1fr)'
+        templateColumns='3fr 1fr 1fr 2fr'
         rowGap={2}
         columnGap={2}>
         {headers.map(_header => cell(_header))}

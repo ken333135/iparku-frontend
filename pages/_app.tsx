@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         justifyContent="center"
         alignContent="center"
       >
-        <Container maxW='container.sm'>
+        <Container maxW='container.md'>
           <Navbar />
           <Component {...pageProps} />
         </Container>

@@ -1,5 +1,5 @@
 import React from "react";
-import { debounce } from "lodash";
+import { debounce, sortBy } from "lodash";
 
 import Image from "next/image";
 import {
@@ -24,27 +24,6 @@ type I_HomeState = {
   carparks: any[];
   isError: Boolean;
 };
-
-const data = [{
-  location: 'CP11, BIZ',
-  distance: 550,
-  availability: true,
-  rate: '$0.0214/min',
-  fee: 11.56
-}, {
-  location: 'CP13, COM1',
-  distance: 700,
-  availability: true,
-  rate: '$0.0214/min',
-  fee: 11.56
-}, {
-  location: 'CP12, BIZ',
-  distance: 900,
-  availability: false,
-  rate: '$0.03/min',
-  fee: 15.22
-}]
-
 class Home extends React.Component<{}, I_HomeState> {
   constructor(props: any) {
     super(props);
@@ -70,6 +49,7 @@ class Home extends React.Component<{}, I_HomeState> {
   }
 
   render() {
+
     return (
       <Flex
         flexDir={{ base: 'column', md: 'row' }}
@@ -163,20 +143,29 @@ class Home extends React.Component<{}, I_HomeState> {
 
     try {
 
-      const RADIUS = 500
+      const RADIUS = 150
       const carparkResponse = await _getCarparkByXY(selectedResult.X, selectedResult.Y, `${RADIUS}`)
       console.table(carparkResponse.data)
       const carparks = carparkResponse.data.map(_carpark => {
+
         return {
           location: _carpark.address,
-          distance: _carpark.distance.toFixed(0),
           lots_available: _carpark.lots_available,
           total_lots: _carpark.total_lots,
           availability: _carpark.lots_available < _carpark.total_lots,
           rates: _carpark.rates,
-          rate: _carpark.rates.pricing ? `$${_carpark.rates.pricing}/min` : '',
-          fee: '$1.11',
+          ..._carpark,
+          distance: _carpark.distance.toFixed(0),
         }
+      })
+      .sort((a,b) => {
+          if (parseInt(a.distance) > parseInt(b.distance)) {
+            return 1
+          }
+          if (parseInt(a.distance) < parseInt(b.distance)) {
+            return -1
+          }
+          return 0
       })
 
       this.setState({
