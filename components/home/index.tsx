@@ -1,5 +1,6 @@
 import React from "react";
-import { debounce, sortBy } from "lodash";
+import moment from 'moment';
+import { debounce } from "lodash";
 
 import Image from "next/image";
 import {
@@ -30,20 +31,21 @@ class Home extends React.Component<{}, I_HomeState> {
     this.state = {
       searchResults: [
         {
-            "SEARCHVAL": "INTERNATIONAL PLAZA",
-            "BLK_NO": "10",
-            "ROAD_NAME": "ANSON ROAD",
-            "BUILDING": "INTERNATIONAL PLAZA",
-            "ADDRESS": "10 ANSON ROAD INTERNATIONAL PLAZA SINGAPORE 079903",
-            "POSTAL": "079903",
-            "X": "29402.860423184",
-            "Y": "28706.5974581633",
-            "LATITUDE": "1.27588674266836",
-            "LONGITUDE": "103.845923793168",
-            "LONGTITUDE": "103.845923793168"
+          "SEARCHVAL": "INTERNATIONAL PLAZA",
+          "BLK_NO": "10",
+          "ROAD_NAME": "ANSON ROAD",
+          "BUILDING": "INTERNATIONAL PLAZA",
+          "ADDRESS": "10 ANSON ROAD INTERNATIONAL PLAZA SINGAPORE 079903",
+          "POSTAL": "079903",
+          "X": "29402.860423184",
+          "Y": "28706.5974581633",
+          "LATITUDE": "1.27588674266836",
+          "LONGITUDE": "103.845923793168",
+          "LONGTITUDE": "103.845923793168"
         }
-    ],
+      ],
       carparks: [],
+      datetime: moment(),
       isError: false,
     };
   }
@@ -176,6 +178,12 @@ class Home extends React.Component<{}, I_HomeState> {
     }
   
 
+  }
+
+  onChange = (e) => {
+    console.log({e})
+
+    return
   }
 }
 

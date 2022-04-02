@@ -11,11 +11,13 @@ type T_TableData = {
   location: string,
   distance: number,
   availability?: boolean,
+  predictedAvailability?: number,
   lots_available?: number,
   total_lots?: number,
   rates?: any[],
   rate?: string,
   fee?: number
+  
 }
 
 interface I_TableProps {
@@ -39,7 +41,8 @@ const cell = ({ text, backgroundColor, textColor }: T_CellData) => {
 const headers = [
   { text: 'Location', backgroundColor: '#b6b7b9' },
   { text: 'Distance', backgroundColor: '#b6b7b9' },
-  { text: 'Availability', backgroundColor: '#b6b7b9' },
+  { text: 'Avail', backgroundColor: '#b6b7b9' },
+  { text: 'Avail (in 1 hour)', backgroundColor: '#b6b7b9' },
   { text: 'Rate', backgroundColor: '#b6b7b9' },
   // { text: 'Fee (est.)', backgroundColor: '#b6b7b9' },
 ]
@@ -82,12 +85,12 @@ class Table extends React.Component<I_TableProps> {
     
     this.props.data.map(_data => {
 
-      const rateTextPublic = _data.rates && `${_data.rates[rateKeyPublic]}/min` 
+      const rateTextPublic = _data.rates && `$${_data.rates[rateKeyPublic]}/min` 
       const rateTextPrivate = `${_data[rateKeyPrivate]}` 
       const rateText = _data.rates ? rateTextPublic : rateTextPrivate
 
       /* default */
-      let availability = 'Unavailable'
+      let availability = 'No data'
       /* If both total and avail  */
       if (_data.lots_available && _data.total_lots) {
         availability = `${_data.lots_available} / ${_data.total_lots}`
@@ -110,12 +113,18 @@ class Table extends React.Component<I_TableProps> {
       /* Availability */
       cells.push({ 
         text: availability,
-        textColor: _data.availability ? 'green': 'red',
+        textColor: availability !== 'No data' ? 'green': 'red',
+        backgroundColor: '#e6e6e6',
+      })
+      /* Predicted Availability */
+      cells.push({ 
+        text: `${_data.predictedAvailability}` || '0',
+        textColor: _data.predictedAvailability ? 'green': 'red',
         backgroundColor: '#e6e6e6',
       })
       /* Rate */
       cells.push({ 
-        text: rateText,
+        text: rateText as string,
         backgroundColor: '#e6e6e6',
       })
       // /* Fee */
@@ -127,7 +136,7 @@ class Table extends React.Component<I_TableProps> {
 
     return (
       <Grid
-        templateColumns='3fr 1fr 1fr 2fr'
+        templateColumns='3fr 1fr 1fr 1fr 2fr'
         rowGap={2}
         columnGap={2}>
         {headers.map(_header => cell(_header))}
