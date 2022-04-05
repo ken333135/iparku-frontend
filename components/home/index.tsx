@@ -1,5 +1,4 @@
 import React from "react";
-import moment from 'moment';
 import { debounce } from "lodash";
 
 import Image from "next/image";
@@ -45,7 +44,6 @@ class Home extends React.Component<{}, I_HomeState> {
         }
       ],
       carparks: [],
-      datetime: moment(),
       isError: false,
     };
   }
@@ -148,7 +146,7 @@ class Home extends React.Component<{}, I_HomeState> {
       const RADIUS = 150
       const carparkResponse = await _getCarparkByXY(selectedResult.X, selectedResult.Y, `${RADIUS}`)
       console.table(carparkResponse.data)
-      const carparks = carparkResponse.data.map(_carpark => {
+      const carparks = carparkResponse.data.map((_carpark: any) => {
 
         return {
           location: _carpark.address,
@@ -160,7 +158,7 @@ class Home extends React.Component<{}, I_HomeState> {
           distance: _carpark.distance.toFixed(0),
         }
       })
-      .sort((a,b) => {
+      .sort((a:any,b:any) => {
           if (parseInt(a.distance) > parseInt(b.distance)) {
             return 1
           }
@@ -180,11 +178,6 @@ class Home extends React.Component<{}, I_HomeState> {
 
   }
 
-  onChange = (e) => {
-    console.log({e})
-
-    return
-  }
 }
 
 export default Home;

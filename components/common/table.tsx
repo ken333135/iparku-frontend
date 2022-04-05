@@ -16,8 +16,11 @@ type T_TableData = {
   total_lots?: number,
   rates?: any[],
   rate?: string,
-  fee?: number
-  
+  fee?: number,
+  weekday_before_5?: string,
+  weekday_after_5?: string,
+  sat?: string,
+  sun?: string
 }
 
 interface I_TableProps {
@@ -55,8 +58,8 @@ class Table extends React.Component<I_TableProps> {
     const dow = moment().isoWeekday()
     const hour = moment().hour()
 
-    let rateKeyPublic: string;
-    let rateKeyPrivate: string;
+    let rateKeyPublic: any;
+    let rateKeyPrivate: keyof T_TableData;
 
 
     switch(dow) {
@@ -79,7 +82,7 @@ class Table extends React.Component<I_TableProps> {
         break;
       default:
         rateKeyPublic = 'weekday_rate';
-        rateKeyPrivate = 'weekday_rate';
+        rateKeyPrivate = 'weekday_before_5';
     }
 
     
