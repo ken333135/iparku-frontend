@@ -14,7 +14,7 @@ type T_TableData = {
   predictedAvailability?: number,
   lots_available?: number,
   total_lots?: number,
-  rates?: any[],
+  rates?: any,
   rate?: string,
   fee?: number,
   weekday_before_5?: string,
@@ -88,7 +88,9 @@ class Table extends React.Component<I_TableProps> {
     
     this.props.data.map(_data => {
 
-      const rateTextPublic = _data.rates && `$${_data.rates[rateKeyPublic]}/min` 
+      const rateTextPublic = ( _data.rates && _data.rates[rateKeyPublic] ) ?  
+                             `$${_data.rates[rateKeyPublic]}/30min` :
+                             '$0.6/30min' // All other public default to 0.6 per half hour
       const rateTextPrivate = `${_data[rateKeyPrivate]}` 
       const rateText = _data.rates ? rateTextPublic : rateTextPrivate
 
