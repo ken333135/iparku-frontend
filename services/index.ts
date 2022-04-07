@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // const SERVER_URL = 'http://localhost:3000'
-const SERVER_URL = 'http://iparkuserver-env.eba-n4gx6zj6.ap-southeast-1.elasticbeanstalk.com'
+// const SERVER_URL = 'http://iparkuserver-env.eba-n4gx6zj6.ap-southeast-1.elasticbeanstalk.com'
+const SERVER_URL = 'https://cors-everywhere.herokuapp.com/http://iparkuserver-env.eba-n4gx6zj6.ap-southeast-1.elasticbeanstalk.com'
 
 export const _getZipcode = (zipcode: string) => axios({
     method: 'get',
