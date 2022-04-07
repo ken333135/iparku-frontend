@@ -11,7 +11,7 @@ type T_TableData = {
   location: string,
   distance: number,
   availability?: boolean,
-  predictedAvailability?: number,
+  predicted_availability?: number,
   lots_available?: number,
   total_lots?: number,
   rates?: any,
@@ -94,6 +94,8 @@ class Table extends React.Component<I_TableProps> {
       const rateTextPrivate = `${_data[rateKeyPrivate]}` 
       const rateText = _data.rates ? rateTextPublic : rateTextPrivate
 
+      const predictedAvailability = _data.predicted_availability!==9999 ? `${_data.predicted_availability}` : 'No Data'
+
       /* default */
       let availability = 'No data'
       /* If both total and avail  */
@@ -123,8 +125,8 @@ class Table extends React.Component<I_TableProps> {
       })
       /* Predicted Availability */
       cells.push({ 
-        text: `${_data.predictedAvailability}` || '0',
-        textColor: _data.predictedAvailability ? 'green': 'red',
+        text: predictedAvailability,
+        textColor: predictedAvailability!=='No Data' ? 'green': 'red',
         backgroundColor: '#e6e6e6',
       })
       /* Rate */
